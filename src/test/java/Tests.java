@@ -12,7 +12,6 @@ public class Tests {
         Object ob = new Object();
         Object ob1 = new Object();
         Object ob2 = new Object();
-        Map<String, Object> mapCacheTest = new HashMap<>();  //мапа "Cache"-Object=кэш
         Fraction fr = new Fraction(33, 11);
         Fractionable num1 = Util.cache(fr);
         ob = num1.doubleValue();  //результат считается
@@ -30,7 +29,6 @@ public class Tests {
             throw new RuntimeException("test error - Значение в кэш не обновилось!");
         }
     }
-
 }
 
 class  Runner implements Runnable{
