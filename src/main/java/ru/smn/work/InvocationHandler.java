@@ -10,17 +10,16 @@ public class InvocationHandler<T> implements java.lang.reflect.InvocationHandler
     private T fr;
     private Map<String, Boolean> annotationMutator = new HashMap<>();  //мапа: у метода есть "@Mutator"- false/true
     private Map<String, Boolean> annotationCache = new HashMap<>();  //мапа: у метода есть "@Cache"-false/true
-    private Object objCache = new Object();  //Object=кэш
+    private Map<String, Object> mapCache = new HashMap<>();  //мапа "Cache"-Object=кэш
 
-    public Object getCache() {
-        return objCache;
+    public Map<String, Object> getMapCache() {
+        return mapCache;
     }
 
     public InvocationHandler(T fr) {
 
         this.fr = fr;
         initProxy();
-        objCache = null;
     }
 
     @Override
@@ -29,14 +28,14 @@ public class InvocationHandler<T> implements java.lang.reflect.InvocationHandler
         String name = method.getName();
         if (annotationMutator.get(name)) {   //есть аннотацая @Mutator
             ret = method.invoke(fr, args);
-            objCache = null;  //обнуляем кэш
+            this.mapCache.clear(); //очищаем всю мапу
         }
         if (annotationCache.get(name)) {  //есть аннотацая @Cache
-            if (objCache != null) {
-                ret = objCache;
+            if (this.mapCache.size() > 0) {
+                ret = this.mapCache.get(name);
             } else {
                 ret = method.invoke(fr, args);
-                objCache = ret;
+                this.mapCache.put(name, ret);
             }
         }
         return ret;
